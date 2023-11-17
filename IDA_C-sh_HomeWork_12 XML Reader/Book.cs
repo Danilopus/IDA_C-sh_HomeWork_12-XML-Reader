@@ -10,7 +10,7 @@ namespace IDA_C_sh_HomeWork_12_XML_Reader
     {
         public string Title { set; get; }
         public string Author { set; get; }
-        public string Year { set; get; } 
+        public int Year { set; get; } 
         public string Genre { set; get; }
     }
 }
