@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using IDA_C_sh_HomeWork_12_XML_Reader;
 
 /// QUESTIONS ///
 /// 1. 
@@ -44,7 +45,7 @@ namespace IDA_C_sh_HomeWork
 
             string filename_to_read = "books.xml";
 
-
+            List<Book> book_list = new List<Book>();
 
             // Загрузка XML из файла.
             var xml_data = new XmlDocument();
@@ -55,12 +56,50 @@ namespace IDA_C_sh_HomeWork
             
             foreach (XmlElement book in Library) // это узлы book
             {
+                Book book_temp_obj = new Book();
                 foreach (XmlElement book_inner_elements in book) // это элементы внутри book (title, author, year, genre)
-                        Console.WriteLine($"{book_inner_elements.Name}:".PadLeft(10) +$"\t{book_inner_elements.InnerText}");
+                //Console.WriteLine($"{book_inner_elements.Name}:".PadLeft(10) +$"\t{book_inner_elements.InnerText}");
+                {
+                    switch (book_inner_elements.Name)
+                    {
+                        case "title": book_temp_obj.Title = book_inner_elements.InnerText; break;
+                        case "author": book_temp_obj.Author = book_inner_elements.InnerText; break;
+                        case "year": book_temp_obj.Year = book_inner_elements.InnerText; break;
+                        case "genre": book_temp_obj.Genre = book_inner_elements.InnerText; break;
+                        default: throw new Exception("something wrong");
+                    }
+                }
+                book_list.Add(book_temp_obj);
             }
-       
 
-    
+
+            //Вывести все названия книг, отсортированные по названию в алфавитном порядке.
+            Console.WriteLine(new string('-', 35));
+            Console.WriteLine("названия книг, отсортированные по названию в алфавитном порядке:\n");
+            var ordered_by_name = from book in book_list
+                                  orderby book.Title
+                                  select book;
+            foreach (var element in ordered_by_name)
+                Console.WriteLine(element.Title);
+
+            //Посчитать количество книг каждого жанра.
+            Console.WriteLine(new string('-', 35));
+            Console.WriteLine("количество книг каждого жанра:");
+            
+            
+            /*var genre_books_qua = from book in book_list
+                                  groupby book.Genre
+                                  select book;*/
+
+
+
+
+            var genre_books_qua2 = book_list.GroupBy(x => x.Genre).OrderBy(g => g.Count()).Select(g => g.Key);
+
+            foreach (var element in genre_books_qua2)
+                Console.WriteLine(element + element.Count());
+
+            //Console.WriteLine(genre_books_qua2.Distinct().Count());
 
 
         }
